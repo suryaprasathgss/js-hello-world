@@ -1,2 +1,2 @@
 // test.js
-console.log("✅ Tests passed!");
+console.log("✅ Tests passed :)");
