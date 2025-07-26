@@ -8,7 +8,9 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "node test.js",
+    "build": "echo \"Build step not required\""
   },
   "dependencies": {
     "express": "^5.0.0"
