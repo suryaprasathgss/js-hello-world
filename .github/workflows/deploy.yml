@@ -40,6 +40,6 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/express-hello:latest
             docker stop express-hello || true
             docker rm express-hello || true
-            docker run -d --name express-hello -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/express-hello:latest
+            docker run -d --name express-hello -p 3001:3000 ${{ secrets.DOCKERHUB_USERNAME }}/express-hello:latest
           EOF
           
