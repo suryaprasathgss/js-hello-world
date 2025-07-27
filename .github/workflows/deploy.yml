@@ -6,6 +6,7 @@ on:
 
 jobs:
   docker:
+    name: Build and Push Docker Image to Docker Hub
     runs-on: ubuntu-latest
 
     steps:
@@ -27,3 +28,18 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/express-hello:latest
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy on remote server via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SERVER_IP }} << 'EOF'
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/express-hello:latest
+            docker stop express-hello || true
+            docker rm express-hello || true
+            docker run -d --name express-hello -p 3001:3000 ${{ secrets.DOCKERHUB_USERNAME }}/express-hello:latest
+          EOF
+          
