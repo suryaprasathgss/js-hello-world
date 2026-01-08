@@ -1,4 +1,4 @@
-name: GitHub Action Caching
+name: Docker Run
 
 on:
   push:
@@ -12,12 +12,12 @@ jobs:
     environment: devops_demo
 
     steps:
-      - name: Checkout Code
+      - name: :arrow_down_small:Checkout Code
         uses: actions/checkout@v4
         with:
           ref: 'main'
 
-      - name: Setup Node
+      - name: :toolbox:Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: '20.x'
@@ -26,12 +26,12 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@suryaprasathgss'
 
-      - name: Install Dependencies
+      - name: :arrow_down_small:Install Dependencies
         run: |
           npm ci
           npm run build
 
-      - name: Login Docker Hub
+      - name: :technologist:Login Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
