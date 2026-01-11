@@ -1,57 +1,44 @@
-name: GitHub Actions Caching
+name: Docker image to ghcr
 
 on:
   push:
-    branches: [ main ]
+      branches: [main]
   workflow_dispatch:
 
 jobs:
-    creating-cache:
-      name: caching node-modules
-      runs-on: ubuntu-latest
+  Docker-Build-Push:
+    name: Create image of app & push to DockerHub
+    runs-on: ubuntu-latest
+    environment: devops_demo
 
-      steps:
-        - name: Checkout repo
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
 
-        - name: Node Setup              # setup node
-          uses: actions/setup-node@v4
-          with:
-            node-version: '20.x'
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20.x'
+          cache: 'npm'                  # caches ~/.npm folder(tar ball cache & metadata cache)
+          # it monitors the file changes to tell whether the cache is still balid or not on restore
+          cache-dependency-path: package-lock.json   # cache is invalidated if there is a change in this file after caching
 
-        - name: Install dependencies    # install dependencies
-          run: npm install
+      - name: Install Dependencies
+        run: |
+          npm ci
+          npm run build
 
-        - name: Cache node-modules        # action to store data in cache
-          uses: actions/cache@v4
-          with:
-            path: node_modules            # path of the file to be cached
-            # key set for the installed dependency file, helps when restoring the cache.
-            key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-            # hashFiles() built-in function - provides unique sha-256 value for the file
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io                 # gihub packages registry for docker
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   
 
-    testing-cache:
-        name: testing node-modules cache
-        runs-on: ubuntu-latest
-        needs: creating-cache
-
-        steps:
-          - name: checkout repo
-            uses: actions/checkout@v4
-
-          - name: Node Setup
-            uses: actions/setup-node@v4
-            with:
-              node-version: '20.x'
-
-          - name: Restore node-modules cache          # Restore node_modules from cache using same action
-            uses: actions/cache@v4
-            with:
-              path: node_modules
-              # compares the package.json file in the repo with the hashFile saved on caching, and decides cache is valid
-              # if repo package.json was updated after caching, cache is invalidated, new cache is creates on installing dependencies
-              key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
-
-            # Install again (npm will reuse existing node_modules) cache
-          - name: Install dependencies (from cache)
-            run: npm install
+      - name: Docker Build & Push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/js-hello-world:${{ github.sha }}
