@@ -1,0 +1,29 @@
+# defining apiVersion of kubernetes to use for this resource, "v1" is stable for objects like Pods & Service
+apiVersion: v1
+kind: Pod       # kind of K8 object being created, Pod - smallest deployment unit in Kubernetes
+
+# contains info about the object for identification
+metadata:
+  name: name-js     # Pod name (unique within the namespace)
+  
+  # tagging resource - labels are key:value pairs for grouping and selection,
+  # Service, Deployments, Network, Namespace and other resources resources rely on labels to find Pods
+  labels:
+    app: node-app   # label that connects Pod with other resources
+
+# defines desired state of the Pod
+spec:
+  containers:             # list of containers that will run inside the Pod
+    - name: node-app      # container name (unique within the Pod)
+      image: suryaprasathgss/express-hello:latest       # image (<registry>/<image>/<tag>)
+      # Ports that the container expose
+      ports:
+        - containerPort: 3000       # Port on which the app inside the container runs 
+      # container resource management
+      resources:
+        requests:           # min required for the container
+          memory: "128Mi"
+          cpu: "250m"
+        limits:             # max limit allowed to consume 
+          memory: "256Mi"
+          cpu: "500m"

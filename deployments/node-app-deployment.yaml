@@ -1,0 +1,37 @@
+# defining apiVersion for Deployment resources, apps/v1 is the stable
+apiVersion: apps/v1
+kind: Deployment        # kind of K8 object
+metadata:
+  name: node-app-deployment     # name for the Deployment
+  labels:
+    app: node-app         # labels - for organizing & traffic routing
+
+# defines desired state of the deployment
+spec:
+  # no of Pod replicas the deployment should maintain
+  replicas: 2
+  # tells the deployment which Pod it owns
+  selector:
+    matchLabels:
+      app: node-app       # must be the label that is defined in Pod definition file
+
+  # template defines how a Pod should be created (i.e) Pod definition
+  template:   
+  # below template can be copied from Pod definition if available, if not
+  # create Pod definition here
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+        - name: node-app
+          image: suryaprasathgss/express-hello:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

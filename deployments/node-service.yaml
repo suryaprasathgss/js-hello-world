@@ -1,0 +1,25 @@
+# Service creates a stable virtual IP inside the cluster; watches for Pods matching the defined Port, label 
+
+apiVersion: v1
+kind: Service        # K8 object - Service - Network Service to expose app running on Pod
+
+metadata:
+  name: app-service   # Service name (unique within the namespace)
+  labels:
+    app: node-app     # tagging Service with the Pod label. 
+
+spec:
+  type: NodePort      # type of Service - NodePort - allows access from outside the cluster
+  ports:
+    - name: name-service    # name Port
+      # Port to be exposed by the Service in the cluster
+      port: 80
+      # Port to the app in running Pod - Service forwards traffic to this port matching Pods
+      targetPort: 3000
+      # Port for the external client to connect the Cluster - range(30000 - 32767)
+      nodePort: 30005
+  
+  # defining target Pod endpoint for the Service to connect
+  # Service uses selector to match labels on Pods & route traffic
+  selector:
+    app: node-app     # target Pod label - which Port to route traffic
