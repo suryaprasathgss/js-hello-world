@@ -63,4 +63,4 @@ jobs:
         run: |
           kubectl version --client
           echo "-------------------------------"
-          kubectl get pods
+          kubectl get all
