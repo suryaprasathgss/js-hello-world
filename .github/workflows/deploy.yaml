@@ -13,6 +13,8 @@ jobs:
   Build:
     name: Create image of node app & push to DockerHub
     runs-on: ubuntu-latest
+    environment:
+      name: devops_demo
 
     steps:
       - name: Checkout Code
