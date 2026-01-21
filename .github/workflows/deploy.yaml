@@ -43,6 +43,8 @@ jobs:
   Deploy:
     name: Deploy docker image using Kubernetes Strategy
     runs-on: ubuntu-latest
+    environment:
+      name: devops_demo
 
     steps:
       - name: Checkout Code
