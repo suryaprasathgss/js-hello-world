@@ -49,7 +49,13 @@ jobs:
         uses: actions/checkout@v6
 
       - name: kubectl install
-        uses: azure/setup-kubectl@v4
+        uses: azure/setup-kubectl@v4      # if version not specified, latest version kubectl will be used
+
+      - name: kubeconfig setup
+        uses: azure/k8s-set-context@v4
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: kubectl version check
         run: |
