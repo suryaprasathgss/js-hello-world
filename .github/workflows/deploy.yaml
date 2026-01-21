@@ -61,6 +61,6 @@ jobs:
 
       - name: kubectl version check
         run: |
-          kubectl version --short
+          kubectl version
           echo "-------------------------------"
           kubectl get pods
