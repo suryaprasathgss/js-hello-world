@@ -62,5 +62,5 @@ jobs:
       - name: kubectl version check
         run: |
           kubectl version --client
-          echo "-------------------------------"
+          echo "--------------------------------"
           kubectl get all
