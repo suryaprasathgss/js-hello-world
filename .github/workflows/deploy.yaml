@@ -50,8 +50,6 @@ jobs:
 
       - name: kubectl install
         uses: azure/setup-kubectl@v4
-        with:
-          version: '1.35'
 
       - name: kubectl version check
         run: |
