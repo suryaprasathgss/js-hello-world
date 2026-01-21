@@ -53,7 +53,7 @@ jobs:
       - name: kubectl install
         uses: azure/setup-kubectl@v4      # if version not specified, latest version kubectl will be used
 
-      - name: kubeconfig setup
+      - name: Set KUBECONFIG context
         uses: azure/k8s-set-context@v4
         with:
           method: kubeconfig
@@ -61,6 +61,6 @@ jobs:
 
       - name: kubectl version check
         run: |
-          kubectl version
+          kubectl version --client
           echo "-------------------------------"
           kubectl get pods
